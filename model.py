@@ -4,13 +4,15 @@ from lightgbm import LGBMRegressor
 
 # Train a model to predict player points based on historical data
 def train_model(hist_df):
+    print("Columns in historical data:", hist_df.columns)  # Add this line
     hist_df = hist_df.dropna(subset=['minutes'])
-    pos_encoded = pd.get_dummies(hist_df['position_name'])
+    pos_encoded = pd.get_dummies(hist_df['position_name'])  # This line might fail
     features = pd.concat([pos_encoded, hist_df[['minutes', 'goals_scored', 'assists', 'clean_sheets']]], axis=1)
     target = hist_df['points']
     model = LGBMRegressor()
     model.fit(features.fillna(0), target)
     return model
+
 
 # Apply the model to current season data to predict expected points
 def apply_model(model, current_df):
